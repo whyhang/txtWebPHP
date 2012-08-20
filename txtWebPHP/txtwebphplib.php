@@ -92,19 +92,19 @@ function getUserSetLocation()
 
 
 	$data = array();
-	$data['post'] = array(
+	$data['get'] = array(
 			'txtweb-mobile' => $mobilehash,
-			'txtweb-message' => stripslashes($message),
-			'txtweb-pubkey' => $pubKey,
+			
 			);
-	$response = xhttp::fetch("http://api.txtweb.com/v1/push", $data);
+	$response = xhttp::fetch("http://api.txtweb.com/v1/location/get", $data);
 
 	
-	//Check response from push api
+	
 	$r = new XMLReader();
 	$r->xml($response['body']);
 	$res = xml2assoc($r);
 	$status = $res[0]['value'][0]['value'][0]['value'];
+//	print_r($res);
 	if ($status == 0)
 	return $res[0]['value'][1]['value'][1]['value'];
 	else 
@@ -117,12 +117,11 @@ function getGeoLocation()
 
 
 	$data = array();
-	$data['post'] = array(
+	$data['get'] = array(
 			'txtweb-mobile' => $mobilehash,
-			'txtweb-message' => stripslashes($message),
-			'txtweb-pubkey' => $pubKey,
+			
 			);
-	$response = xhttp::fetch("http://api.txtweb.com/v1/push", $data);
+	$response = xhttp::fetch("http://api.txtweb.com/v1/location/get", $data);
 
 	
 	//Check response from push api
@@ -130,19 +129,18 @@ function getGeoLocation()
 	$r->xml($response['body']);
 	$res = xml2assoc($r);
 	$status = $res[0]['value'][0]['value'][0]['value'];
+//	print_r ($res);
 	if ($status == 0)
-	return implode(",",$res[0]['value'][1]['value'][2]['value']);
+	return $res[0]['value'][1]['value'][2]['value'][0]['value']." , ".$res[0]['value'][1]['value'][2]['value'][1]['value']." , ".$res[0]['value'][1]['value'][2]['value'][2]['value'];
 	else 
 	return 0;
 	
 }
 
-function pushInternal($message)	// for retry logic.
+function pushInternal($message,$mobilehash)	// for retry logic.
 {
 	global $pubKey;
-	//extract the mobile-hash of the user
-	$mobilehash = $_REQUEST['txtweb-mobile']; 
-
+	
 
 	$data = array();
 	$data['post'] = array(
@@ -161,16 +159,16 @@ function pushInternal($message)	// for retry logic.
 	$status = $res[0]['value'][0]['value'][0]['value'];
 	return $status;
 }
-function pushMessage($message)
+function pushMessage($message,$mobilehash)
 {
 
-	$status = pushInternal($message);
+	$status = pushInternal($message,$mobilehash);
 	
 
 	if ($status == 0) return 1; 
 	else if ($status == -1)
 	{	
-	$status2 = pushInternal($message); 
+	$status2 = pushInternal($message,$mobilehash); 
 	if ($status2 == 0) return 1; 
 	else return 0;
 	}
