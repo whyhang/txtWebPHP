@@ -54,7 +54,7 @@ function setAppKey($key)	//function to set the application-key.
 function setPubKey($key)	//function to set the publisher-key (optional) only needed if using PUSH.
 {
 	global $pubKey;
-	$PubKey = $key;
+	$pubKey = $key;
 }
 
 function startApp()	//starting of any txtWebapplication
@@ -68,25 +68,25 @@ echo "<html>
 echo "<br>";
 }
 
-function endApp()
+function endApp()		// function to end a txtWebApp 
 {
 echo "</body></html>";
 }
 
 
 
-function addlink ($link,$text)
+function addlink ($link,$text) //adding link to the app
 {
 echo "<a href='$link' , class='txtweb-menu-for'>$text</a><br>";
 }
 
 
-function addText($text)
+function addText($text)	// adding text to the app	
 {
 	echo "$text <br>";
 }
 
-function getUserSetLocation()
+function getUserSetLocation()	//getting location of the user set by him. ( returns 0 if error )
 {
 	$mobilehash = $_REQUEST['txtweb-mobile']; 
 
@@ -111,7 +111,17 @@ function getUserSetLocation()
 	return 0;
 }
 
-function getGeoLocation()
+function getMessage()
+{
+	return $_REQUEST['txtweb-message'];
+}
+
+function getMobile()
+{
+	return $_REQUEST['txtweb-mobile'];
+}
+
+function getGeoLocation()	//getting geo location of the user ( returns 0 if error )
 {
 	$mobilehash = $_REQUEST['txtweb-mobile']; 
 
@@ -137,17 +147,18 @@ function getGeoLocation()
 	
 }
 
-function pushInternal($message,$mobilehash)	// for retry logic.
+function pushInternal($mobilehash)	// for retry logic.
 {
 	global $pubKey;
+	global $pushMessage;
 	
-
 	$data = array();
 	$data['post'] = array(
 			'txtweb-mobile' => $mobilehash,
-			'txtweb-message' => stripslashes($message),
+			'txtweb-message' => stripslashes($pushMessage),
 			'txtweb-pubkey' => $pubKey,
-			);
+			'txtweb-appkey' => $appKey,
+ 			);
 	$response = xhttp::fetch("http://api.txtweb.com/v1/push", $data);
 
 	
@@ -155,30 +166,32 @@ function pushInternal($message,$mobilehash)	// for retry logic.
 	$r = new XMLReader();
 	$r->xml($response['body']);
 	$res = xml2assoc($r);
-	
+//	print_r($res);
+
 	$status = $res[0]['value'][0]['value'][0]['value'];
 	return $status;
 }
-function pushMessage($message,$mobilehash)
+function pushMessage($mobilehash)	//sends $message to $mobilehash number.
 {
 
-	$status = pushInternal($message,$mobilehash);
+	$status = pushInternal($mobilehash);
 	
 
 	if ($status == 0) return 1; 
 	else if ($status == -1)
 	{	
-	$status2 = pushInternal($message,$mobilehash); 
+	$status2 = pushInternal($mobilehash); 
 	if ($status2 == 0) return 1; 
-	else return 0;
+	else return $status2;
 	}
 	else 
 	{
-		return 0;
+		return $status;
 	}
 }
 
-function isMobileValid()			//code courtesy: http://developer.txtweb.com/tutorials/
+
+function isMobileValid()			//verifies whether the request is from valid fone or not returns 1/0
 {	
 	$verifyService_APIURL = "http://api.txtweb.com/v3/verify";
 	
@@ -226,6 +239,34 @@ function isMobileValid()			//code courtesy: http://developer.txtweb.com/tutorial
 		return 0;
 	}
 
+}
+
+function startPushMessage()
+{
+global $pushMessage;
+global $appKey;
+$pushMessage= "<html><head><meta name='txtweb-appkey' content='$appKey' /><title>Hello</title></head><body>";
+}
+
+function addPushText($txt)
+{
+	global $pushMessage;
+	$pushMessage .= "$txt<br>";
+
+}
+
+function addPushLink($text,$link)
+{
+	global $pushMessage;
+	$pushMessage .= "<a href='$link' , class='txtweb-menu-for'>$text</a><br>";
+
+}
+
+function endPushMessage()
+{
+	global $pushMessage;
+	$pushMessage .= "</body></html>";
+//	echo $pushMessage;
 }
 
 
