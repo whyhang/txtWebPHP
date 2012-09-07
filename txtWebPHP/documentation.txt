@@ -1,11 +1,14 @@
 Documentation for txtwebphpLib
 function definations 
+//for any thing beyond these fuctions please refer to http://developer.txtweb.com/user/tutorial
 
-addAppKey("YOUR-APP-KEY")
+for basic queries refer to whyhang.blogspot.in
+
+setAppKey("YOUR-APP-KEY")
 
 -> Sets up your app key for rest of the application process
 
-addPubKey("YOUR-PUB-KEY")
+setPubKey("YOUR-PUB-KEY")
 
 -> Sets up your pub key for application's process (only required in case of Push message , else optional)
 

@@ -1,9 +1,9 @@
 <?php
 require_once('txtwebphplib.php');
-setAppKey('50e4a7cb-4188-4904-82ab-fef93888c199');
-setPubKey('1783e972-640b-43c5-99b1-2708d556e64c');
+setAppKey('YOUR-APP-KEY');
+setPubKey('YOUR-PUB-KEY'); //opntional : only in case of push messages
 startApp();
-if (!isMobileValid())		// Use this fuction call for checking whether the request is from authentic mobile or not.
+if (isMobileValid())		// Use this fuction call for checking whether the request is from authentic mobile or not.
 {
 	if (!strcmp(getMessage(),"mylocation"))	//checking your location
 	{
