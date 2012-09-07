@@ -2,6 +2,9 @@
 require_once('txtwebphplib.php');
 setAppKey('YOUR-APP-KEY');
 setPubKey('YOUR-PUB-KEY'); //opntional : only in case of push messages
+
+//to see this app in action , sms @phplib to 9243342000
+
 startApp();
 if (isMobileValid())		// Use this fuction call for checking whether the request is from authentic mobile or not.
 {
