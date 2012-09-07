@@ -1,0 +1,68 @@
+Documentation for txtwebphpLib
+function definations 
+
+addAppKey("YOUR-APP-KEY")
+
+-> Sets up your app key for rest of the application process
+
+addPubKey("YOUR-PUB-KEY")
+
+-> Sets up your pub key for application's process (only required in case of Push message , else optional)
+
+
+startApp() 
+
+//APP-BODY-HERE
+
+endApp()
+
+-> Your app's body must lie within these two function calls
+
+
+addText($text)
+
+-> whatever string you pass as $text , your app will SHOW that text.
+
+addLink ($link, $text)
+
+-> a link to $link with $text as a text
+
+getMessage()
+
+-> get the txtweb-message parameter sent by the user.
+
+getMobile()
+
+-> get the hash number (txtweb-mobile) of the user
+
+getUserSetLocation()
+
+-> gives you user set location
+
+getGeoLocation()
+
+-> Get user location , generally passed by txtWeb's aggregator
+
+startPushMessage()
+
+->start of push message
+
+endPushMessage()
+
+->End your push message
+
+addPushText($text)
+
+-> just like addText() but for Push message
+
+addPushLink ($link , $text)
+
+-> just like addLink() but for push message
+
+pushMessage($mobilehash)
+
+-> pushes the pushmessage built using above function calls to @mobilehash user
+
+isMobileValid ()
+
+-> checks whether the given query is authentic from a proper mobile phone or not. 
